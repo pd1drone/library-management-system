@@ -11,13 +11,17 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "axios": "^1.6.3",
+    "crypto-js": "^4.2.0",
     "next": "14.0.3",
     "primeicons": "^6.0.1",
     "primereact": "^10.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-router-dom": "^6.21.1"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
