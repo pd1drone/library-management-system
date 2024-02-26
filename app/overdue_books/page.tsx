@@ -16,6 +16,8 @@ import "primereact/resources/themes/viva-light/theme.css";
 
 import { Button } from "primereact/button";
 import 'primeicons/primeicons.css';
+import api_url from '../api_conf';
+import axios from 'axios';
 
 interface OverdueBooks {
     TransactionID: number;
@@ -30,13 +32,7 @@ interface OverdueBooks {
 export default function OverdueBookList() {
 
     const [globalFilterValue, setGlobalFilterValue] = useState('');
-    const [overdueBooks, setoverdueBooks] = useState<OverdueBooks[]>([
-        { TransactionID: 1, StudentID: 1, StudentName: 'John Doe', BookID: 1, BookTitle: 'Book 1', BorrowedDate: '2023-01-01', OverdueDate: '2023-01-15' },
-        { TransactionID: 2, StudentID: 2, StudentName: 'Jane Doe', BookID: 2, BookTitle: 'Book 2', BorrowedDate: '2023-02-01', OverdueDate: '2023-02-15' },
-        { TransactionID: 3, StudentID: 3, StudentName: 'Bob Brown', BookID: 3, BookTitle: 'Book 3', BorrowedDate: '2023-03-01', OverdueDate: '2023-03-15' },
-        { TransactionID: 4, StudentID: 4, StudentName: 'Alice Anderson', BookID: 4, BookTitle: 'Book 4', BorrowedDate: '2023-04-01', OverdueDate: '2023-04-15' },
-        { TransactionID: 5, StudentID: 5, StudentName: 'Charlie Chaplin', BookID: 5, BookTitle: 'Book 5', BorrowedDate: '2023-05-01', OverdueDate: '2023-05-15' },
-      ]);
+    const [overdueBooks, setoverdueBooks] = useState();
     
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -55,6 +51,18 @@ export default function OverdueBookList() {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     });
     };
+
+    useEffect(() => {
+      var getbooks = async () => {
+        await axios
+          .get(api_url + "overdue_books")
+          .then((response) => setoverdueBooks(response.data));
+        return;
+      };
+  
+      getbooks();
+      initFilters();
+    }, []);
 
     const actionBodyTemplate = (rowData: any) => {
         return (
@@ -81,14 +89,14 @@ export default function OverdueBookList() {
         </h1>
         
         <div className="grid grid-cols-4 p-5 mb-10 ">
-            <button
+            {/* <button
                     className="p-2 uppercase rounded-md bg-blue-600 text-white font-medium hover:bg-blue-800 "
                     type="button"
                     //   onClick={handleLogin}
                     >
                     <FontAwesomeIcon icon={faBook as IconProp} className="mr-2" />
                     Add Overdue Book
-            </button>
+            </button> */}
             <div></div>
             <div></div>
             <InputText className="p-2" value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
@@ -98,12 +106,11 @@ export default function OverdueBookList() {
         rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
             <Column field="TransactionID" header="TransactionID" sortable></Column>
             <Column field="StudentID" header="StudentID" sortable></Column>
-            <Column field="StudentName" header="StudentName" sortable></Column>
+            <Column field="Student.FullName" header="StudentName" sortable></Column>
             <Column field="BookID" header="BookID" sortable></Column>
-            <Column field="BookTitle" header="BookTitle" sortable></Column>
+            <Column field="Book.Title" header="BookTitle" sortable></Column>
             <Column field="BorrowedDate" header="BorrowedDate" sortable></Column>
             <Column field="OverdueDate" header="OverdueDate" sortable></Column>
-            <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
   
